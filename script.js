@@ -14,4 +14,9 @@ function createGrid(row,column){
   }
 }
 
-createGrid(16,16)
+const hover = document.querySelector('.hover');
+hover.addEventListener('mouseover',() => {
+    
+})
+
+createGrid(10,10)
