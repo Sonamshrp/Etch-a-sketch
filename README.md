@@ -2,6 +2,15 @@
 
  >This is my first markdown. And this is amazing. Wish I had known it how to use earlier.
 
+## Contents
+
+* Loop inside loop 
+
+* [When to use event](#when-to-use-event)
+
+* [Dynamic and static node](#dynamic-and-static-node)
+
+* [Things I am still confused about](#problems)
 
 ## Loop inside loop
 
@@ -88,5 +97,95 @@ We can also check whether a nodelist ,when we, is static or dynamic.
 
 > On the other hand, a **dynamic** node list is a live list that reflects the current state of the document. If you query the DOM using a method like getElementsByTagName(), the returned node list is dynamic. Dynamic node lists are updated automatically when the document changes, so if you add or remove nodes that match the query, the node list will be updated to reflect those changes.
 
+## Problems
 
+---
+
+In this code I was able to fix `startNew()` function adding new grid to the existing.
+
+```js
+function startNew(){
+  
+    let gridNum = +prompt('size of grid:','enter the number');
+    // below code removes the older grid    
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+    // below code creates a new grid after older one is removed
+    createGrid(gridNum, gridNum);
+};
+button.addEventListener('click',startNew)
+```
+
+While loop here creates a new grid by removing first the old the if it is there with `while (container.firstChild)` condition. If the condition fails ie, false then creates a new grid without executing `removeChild` here. Also following problem was solved as given below
+
+### Previous code
+
+```js
+const button = document.querySelector('.button');
+button.addEventListener('click',()=>{
+    let gridNum = +prompt('size of grid:','enter the number');
+    console.log(gridNum);
+    createGrid(gridNum, gridNum);
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => {
+      cell.addEventListener('mouseover', (e) => {
+      e.target.classList.add('clicked');
+    })
+  })
+});
+```
+
+In this code `mouseover` event does work but I can't add another code to start new grid as that would clutter the `click` function. So I did
+
+```js
+const button = document.querySelector('.button');
+button.addEventListener('click',()=>{
+    let gridNum = +prompt('size of grid:','enter the number');
+    console.log(gridNum);
+    createGrid(gridNum, gridNum);
+});
+
+const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => {
+      cell.addEventListener('mouseover', (e) => {
+      e.target.classList.add('clicked');
+    })
+  })
+```
+
+But when I removed and put `mouseover` function outside `click` function like above, it was not adding the class `clicked` because
+
+>The issue with the above code is that the mouseover event listener is being attached to the cells before they are created by the createGrid function. Since the cells don't exist when the event listener is attached, the listener doesn't have any effect.
+
+So the solution was to include `mouseover` event inside `createGrid` function like this.
+
+```js
+function createGrid(row,column){
+    for(i=1;i<=row;i++){
+    const rows = document.createElement('div');
+    rows.classList.add('rows');
+    rows.classList.add('cell')
+    
+    for(j=1;j<=column;j++){
+        const columns = document.createElement('div');
+        columns.classList.add('columns');
+        columns.classList.add('cell');
+        rows.appendChild(columns);
+    }
+    container.appendChild(rows);
+  }
+
+  const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => {
+      cell.addEventListener('mouseover', (e) => {
+        e.target.classList.add('clicked');
+    })
+  })
+}
+```
+
+## Note
+
+> In above version, the `createGrid` function adds the `mouseover` event listener to each cell after it creates them. This ensures that the listener is properly attached and the clicked class is added to cells when they are hovered over.
 
