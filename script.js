@@ -4,12 +4,12 @@ function createGrid(row,column){
     for(i=1;i<=row;i++){
     const rows = document.createElement('div');
     rows.classList.add('rows');
-    rows.setAttribute('id','cell')
+    rows.classList.add('cell')
     
     for(j=1;j<=column;j++){
         const columns = document.createElement('div');
         columns.classList.add('columns');
-        columns.setAttribute('id','cell')
+        columns.classList.add('cell');
         rows.appendChild(columns);
     }
     container.appendChild(rows);
@@ -17,11 +17,20 @@ function createGrid(row,column){
 }
 
 const hover = document.querySelector('.hover');
-hover.addEventListener('mouseover',() => {
-    
-})
 
-createGrid(10,10);
+const button = document.querySelector('.button');
+button.addEventListener('click',()=>{
+    let gridNum = +prompt('size of grid:','enter the number');
+    console.log(gridNum);
+    createGrid(gridNum, gridNum);
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => {
+      cell.addEventListener('mouseover', (e) => {
+      e.target.classList.add('clicked');
+    })
+  })
+});
 
-const cells = document.querySelector('#cell');
+
+
 console.log(cells)
